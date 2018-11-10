@@ -7,6 +7,11 @@ import matplotlib.pyplot as plt
 avg_over = 25
 data_path = "hardwareswap_scraper/"
 fnames = [x for x in os.listdir(data_path) if ("valid_prices" in x) and (x[0] != ".")]
+fnames = ["970_valid_prices.csv",
+            "980_valid_prices.csv",
+            "1070_valid_prices.csv",
+            "1080_valid_prices.csv",
+            "2080_valid_prices.csv",]
 
 def moving_average(a, n=3):
     ret = np.cumsum(a, dtype=float)
@@ -34,7 +39,7 @@ for fname in fnames:
         if idx == 0:
             continue
         l = line.split(",")
-        if "ti" in l[1].lower():
+        if "ti" not in l[1].lower():
             continue
         year = int(l[4])
         month = int(l[5])
@@ -71,8 +76,8 @@ plt.xticks(locs,labels,rotation='vertical')
 plt.subplots_adjust(bottom=0.15)
 
 
-plt.title("Non-Ti Series Cards")
-plt.savefig(os.path.join(data_path,"Non-Ti_cards.png"))
+plt.title("Ti Series Cards")
+plt.savefig(os.path.join(data_path,"Ti_cards.png"))
 plt.show()
 
         
