@@ -5,9 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 avg_over = 25
-fnames = [x for x in os.listdir() if ("valid_prices" in x) and (x[0] != ".")]
-print(fnames)
-#fnames = ["2080_valid_prices.csv"]
+data_path = "hardwareswap_scraper/"
+fnames = [x for x in os.listdir(data_path) if ("valid_prices" in x) and (x[0] != ".")]
 
 def moving_average(a, n=3):
     ret = np.cumsum(a, dtype=float)
@@ -21,10 +20,12 @@ def moving_average(a, n=3):
     return ret
 
 outdata = {}
+min_time = datetime.timestamp(datetime.now())
+max_time = 0
 
 for fname in fnames:
     id = fname[:4]
-    with open(fname,'r') as f:
+    with open(os.path.join(data_path,fname),'r') as f:
         data = f.readlines()
     if len(data) <=1:
         continue
@@ -33,7 +34,7 @@ for fname in fnames:
         if idx == 0:
             continue
         l = line.split(",")
-        if "ti" not in l[1].lower():
+        if "ti" in l[1].lower():
             continue
         year = int(l[4])
         month = int(l[5])
@@ -52,10 +53,26 @@ for fname in fnames:
     avg_over_instance = min(avg_over,int(outdata[id][0,:].shape[0]/4))
     outdata[id][1,:] = moving_average(outdata[id][1,:],n=avg_over_instance)
 
-    print(outdata[id][0,:10])
+    min_time = min(min_time,outdata[id][0,0])
+    max_time = max(max_time,outdata[id][0,-1])
+
     label = fname[:fname.find("_")]
     plt.plot(outdata[id][0,1:],outdata[id][1,1:],label=label)
+plt.xlim((min_time,max_time))
+
 plt.legend()
+plt.grid(True)
+
+locs,labels = plt.xticks()
+labels = []
+for loc in locs:
+    labels.append(datetime.utcfromtimestamp(loc).strftime('%m/%Y'))
+plt.xticks(locs,labels,rotation='vertical')
+plt.subplots_adjust(bottom=0.15)
+
+
+plt.title("Non-Ti Series Cards")
+plt.savefig(os.path.join(data_path,"Non-Ti_cards.png"))
 plt.show()
 
         
