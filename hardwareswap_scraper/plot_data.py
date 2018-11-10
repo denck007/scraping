@@ -39,7 +39,8 @@ for fname in fnames:
         if idx == 0:
             continue
         l = line.split(",")
-        if "ti" not in l[1].lower():
+        #if "ti" not in l[1].lower(): # for Ti search
+        if "ti" in l[1].lower():
             continue
         year = int(l[4])
         month = int(l[5])
@@ -61,7 +62,8 @@ for fname in fnames:
     min_time = min(min_time,outdata[id][0,0])
     max_time = max(max_time,outdata[id][0,-1])
 
-    label = "GTX {}Ti".format(fname[:fname.find("_")])
+    #label = "GTX {}Ti".format(fname[:fname.find("_")])
+    label = "GTX {}".format(fname[:fname.find("_")])
     plt.plot(outdata[id][0,1:],outdata[id][1,1:],label=label)
 plt.xlim((min_time,max_time))
 plt.xlabel("Date")
@@ -78,8 +80,12 @@ plt.xticks(locs,labels,rotation='vertical')
 plt.subplots_adjust(bottom=0.15)
 
 
-plt.title("Nvidia GTX Ti Series Graphics Cards")
-plt.savefig(os.path.join(data_path,"imgs/Ti_cards.png"))
+#plt.title("Nvidia GTX Ti Series Graphics Cards")
+#plt.savefig(os.path.join(data_path,"imgs/Ti_cards.png"))
+
+plt.title("Nvidia GTX Series Graphics Cards")
+plt.savefig(os.path.join(data_path,"imgs/Non-Ti_cards.png"))
+
 plt.show()
 
         
