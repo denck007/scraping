@@ -39,7 +39,7 @@ for fname in fnames:
         if idx == 0:
             continue
         l = line.split(",")
-        if "ti" in l[1].lower():
+        if "ti" not in l[1].lower():
             continue
         year = int(l[4])
         month = int(l[5])
